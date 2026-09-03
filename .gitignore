@@ -1,0 +1,36 @@
+# ---- Large media (exceeds GitHub's 100 MB file limit) ----
+# The lecture MP3s live locally only. Host them on a CDN / object store
+# and point the players at those URLs, or switch this project to Git LFS.
+audio/
+
+# ---- macOS ----
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ---- Editors / IDEs ----
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+*~
+
+# ---- Node / tooling (in case a build step is added later) ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.cache/
+dist/
+.env
+.env.local
+
+# ---- Logs & temp ----
+*.log
+tmp/
+temp/

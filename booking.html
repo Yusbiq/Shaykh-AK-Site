@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Book — Shaykh AK</title>
+<style>
+  :root {
+    --bg: #0D0D0D;
+    --purple: #8B5CF6;
+    --pink: #EC4899;
+    --text: #F5F5F7;
+    --muted: #A1A1AA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .gradient-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.35), transparent 45%),
+                radial-gradient(circle at 80% 30%, rgba(236, 72, 153, 0.30), transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.25), transparent 50%),
+                var(--bg);
+    background-size: 200% 200%;
+    animation: drift 18s ease-in-out infinite;
+  }
+  .gradient-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(139, 92, 246, 0.12), rgba(236, 72, 153, 0.12), rgba(139, 92, 246, 0.12));
+    background-size: 300% 300%;
+    animation: hue 12s ease infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes drift {
+    0%, 100% { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+    50% { background-position: 100% 100%, 0% 100%, 50% 0%, 0 0; }
+  }
+  @keyframes hue {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2rem;
+    backdrop-filter: blur(10px);
+    background: rgba(13, 13, 13, 0.55);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  nav .brand {
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+  }
+  nav ul { list-style: none; display: flex; gap: 2rem; }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease;
+  }
+  nav a:hover, nav a.active { color: var(--text); }
+
+  /* Hamburger (hidden on desktop) */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    margin: -10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 20;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--text);
+    transition: transform 0.3s ease, opacity 0.2s ease;
+  }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  @media (max-width: 720px) {
+    .nav-toggle { display: flex; }
+    nav ul {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      padding: 0.4rem 0;
+      background: rgba(13, 13, 13, 0.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transform: translateY(-8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    nav ul.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    nav ul li { width: 100%; }
+    nav ul a { display: block; padding: 0.95rem 1.5rem; font-size: 1rem; }
+  }
+
+  .wrap {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+
+  .page-title {
+    text-align: center;
+    font-size: clamp(2rem, 7vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 30px rgba(139,92,246,0.8), 0 0 60px rgba(236,72,153,0.5);
+  }
+  .page-sub {
+    text-align: center;
+    color: var(--muted);
+    margin-top: 0.5rem;
+    margin-bottom: 2.75rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+  }
+
+  form {
+    background: linear-gradient(160deg, rgba(139,92,246,0.14), rgba(236,72,153,0.10), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 24px;
+    padding: 2.25rem;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(139,92,246,0.15);
+  }
+
+  .field { margin-bottom: 1.35rem; }
+  .field:last-of-type { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  label .req { color: var(--pink); }
+
+  input, select, textarea {
+    width: 100%;
+    min-height: 48px;               /* comfortable tap target */
+    padding: 0.85rem 1rem;
+    font: inherit;
+    color: var(--text);
+    background: rgba(13,13,13,0.55);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  input::placeholder, textarea::placeholder { color: rgba(161,161,170,0.6); }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(139,92,246,0.25), 0 0 20px rgba(236,72,153,0.2);
+  }
+
+  textarea { resize: vertical; min-height: 110px; }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='%23A1A1AA'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+  select option { background: #0D0D0D; color: var(--text); }
+
+  /* Style the native date picker indicator for dark theme */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) opacity(0.6);
+    cursor: pointer;
+  }
+
+  .submit-btn {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 1.75rem;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    background-size: 200% 200%;
+    box-shadow: 0 0 25px rgba(139,92,246,0.55), 0 0 45px rgba(236,72,153,0.35);
+    animation: hue 6s ease infinite;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  }
+  .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px rgba(139,92,246,0.8), 0 0 65px rgba(236,72,153,0.55);
+  }
+  .submit-btn:disabled { opacity: 0.7; cursor: wait; }
+
+  .submit-btn .spinner {
+    width: 1.05em;
+    height: 1.05em;
+    flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    display: none;
+    animation: spin 0.7s linear infinite;
+  }
+  .submit-btn.loading .spinner { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .form-error {
+    margin-top: 1rem;
+    text-align: center;
+    color: #FCA5A5;
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  /* Per-field validation */
+  .field-error {
+    display: none;
+    margin-top: 0.4rem;
+    color: #FCA5A5;
+    font-size: 0.82rem;
+    letter-spacing: 0.01em;
+  }
+  .field.invalid .field-error { display: block; }
+  .field.invalid input,
+  .field.invalid select,
+  .field.invalid textarea {
+    border-color: #F87171;
+    box-shadow: 0 0 0 3px rgba(248,113,113,0.22);
+  }
+
+  /* Success modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(5, 5, 8, 0.72);
+    backdrop-filter: blur(6px);
+    animation: fade 0.25s ease;
+  }
+  .modal-overlay.show { display: flex; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal-card {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    background: linear-gradient(160deg, rgba(139,92,246,0.20), rgba(236,72,153,0.12), rgba(18,18,24,0.92));
+    border: 1px solid rgba(236,72,153,0.4);
+    border-radius: 24px;
+    padding: 3rem 2.25rem 2.5rem;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(139,92,246,0.28);
+    animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .modal-card .check {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(139,92,246,0.65), 0 0 60px rgba(236,72,153,0.4);
+  }
+  .modal-card .check svg { width: 38px; height: 38px; fill: #fff; }
+  .modal-card h2 {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 24px rgba(139,92,246,0.7);
+    margin-bottom: 0.75rem;
+  }
+  .modal-card p { color: var(--muted); font-size: 0.98rem; line-height: 1.6; }
+  .modal-close {
+    margin-top: 2rem;
+    width: 100%;
+    min-height: 48px;
+    padding: 0.9rem;
+    font: inherit;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    box-shadow: 0 0 22px rgba(139,92,246,0.5), 0 0 40px rgba(236,72,153,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .modal-close:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 32px rgba(139,92,246,0.75), 0 0 55px rgba(236,72,153,0.5);
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1.25rem; }
+    .wrap { padding: 2.5rem 1.15rem 4rem; }
+    form { padding: 1.5rem; border-radius: 20px; }
+    .modal-card { padding: 2.5rem 1.6rem 2rem; }
+  }
+
+  @media (max-width: 600px) {
+    /* Roomier tap targets on touch screens */
+    input, select, .submit-btn, .modal-close { min-height: 52px; }
+    input, select, textarea { padding: 0.95rem 1rem; }
+    select { padding-right: 2.5rem; }
+  }
+
+  /* Keep font-size >=16px on inputs so iOS Safari doesn't zoom on focus */
+  @media (max-width: 480px) {
+    input, select, textarea { font-size: 16px; }
+  }
+
+  /* Site footer */
+  .site-footer {
+    position: relative;
+    margin-top: 3rem;
+    padding: 2.75rem 1.5rem 3rem;
+    background: rgba(9, 9, 12, 0.55);
+    backdrop-filter: blur(8px);
+  }
+  .site-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--purple), var(--pink), transparent);
+  }
+  .footer-inner {
+    max-width: 620px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.35rem;
+    text-align: center;
+  }
+  .footer-social {
+    display: flex;
+    gap: 0.9rem;
+  }
+  .footer-social a {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--muted);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .footer-social a:hover,
+  .footer-social a:focus-visible {
+    color: #fff;
+    border-color: rgba(236, 72, 153, 0.75);
+    transform: translateY(-2px);
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.4);
+    outline: none;
+  }
+  .footer-social svg { width: 19px; height: 19px; fill: currentColor; }
+  .footer-email {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid rgba(236, 72, 153, 0.5);
+    padding-bottom: 2px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .footer-email:hover { color: #fff; border-color: var(--pink); }
+  .footer-copy {
+    color: var(--muted);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+  @media (max-width: 600px) {
+    .site-footer { padding: 2.25rem 1.25rem 2.5rem; }
+    .footer-social a { width: 46px; height: 46px; }
+  }
+
+  /* Page loading animation */
+  .page-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.75rem;
+    background: var(--bg);
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+  .page-loader.loaded {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .loader-logo {
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #fff;
+    text-shadow:
+      0 0 4px rgba(255, 255, 255, 0.9),
+      0 0 12px rgba(139, 92, 246, 1),
+      0 0 30px rgba(139, 92, 246, 0.8),
+      0 0 55px rgba(236, 72, 153, 0.6),
+      0 0 90px rgba(236, 72, 153, 0.4);
+    animation: loaderPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes loaderPulse {
+    0%, 100% { opacity: 0.85; filter: brightness(1); }
+    50% { opacity: 1; filter: brightness(1.15); }
+  }
+  .loader-bar {
+    position: relative;
+    width: 180px;
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+  .loader-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -40%;
+    width: 40%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
+    animation: loaderSlide 1.1s ease-in-out infinite;
+  }
+  @keyframes loaderSlide {
+    0% { left: -40%; }
+    100% { left: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .loader-logo { animation: none; }
+    .loader-bar::after { animation: none; left: 0; width: 100%; }
+  }
+
+  /* Scroll-triggered reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page-loader" id="pageLoader">
+  <div class="loader-logo">Shaykh AK</div>
+  <div class="loader-bar"></div>
+</div>
+<script>
+  (function () {
+    var loader = document.getElementById('pageLoader');
+    if (!loader) return;
+    var start = Date.now();
+    var MIN_MS = 600;   // show at least this long so the animation reads
+    var MAX_MS = 2200;  // never block the page longer than this
+    var done = false;
+    function hide() {
+      if (done) return;
+      done = true;
+      var wait = Math.max(0, MIN_MS - (Date.now() - start));
+      setTimeout(function () {
+        loader.classList.add('loaded');
+        setTimeout(function () { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 600);
+      }, wait);
+    }
+    if (document.readyState === 'complete') hide();
+    else window.addEventListener('load', hide);
+    setTimeout(hide, MAX_MS);
+  })();
+</script>
+<div class="gradient-bg"></div>
+
+<nav>
+  <span class="brand">Shaykh AK</span>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMenu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul id="navMenu">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="sounds.html">Sounds</a></li>
+    <li><a href="booking.html" class="active">Book</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+  <h1 class="page-title">Book Shaykh AK</h1>
+  <p class="page-sub">Send an enquiry for your event &mdash; you'll receive a reply within 48 hours.</p>
+
+  <!--
+    Mobile input conventions:
+      - email   -> type="email"  (email keyboard)
+      - phone   -> type="tel" inputmode="tel"  (dial pad) when a phone field is added
+      - numbers -> type="text" inputmode="numeric"  (number pad) for free-text number fields
+      - dates   -> type="date"  (native mobile date picker)
+  -->
+  <form id="bookingForm" action="https://formspree.io/f/mljebdjr" method="POST" novalidate>
+    <div class="field">
+      <label for="name">Full Name <span class="req">*</span></label>
+      <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name" required />
+    </div>
+
+    <div class="field">
+      <label for="email">Email <span class="req">*</span></label>
+      <input type="email" id="email" name="email" placeholder="you@example.com"
+             inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required />
+    </div>
+
+    <div class="field">
+      <label for="date">Event Date <span class="req">*</span></label>
+      <input type="date" id="date" name="event_date" required />
+    </div>
+
+    <div class="field">
+      <label for="type">Event Type <span class="req">*</span></label>
+      <select id="type" name="event_type" required>
+        <option value="" disabled selected>Select event type</option>
+        <option>Nikah/Aqeeqah</option>
+        <option>Markaz</option>
+        <option>Lecture</option>
+        <option>School Sermon</option>
+        <option>Khutbah</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="venue">Venue Name <span class="req">*</span></label>
+      <input type="text" id="venue" name="venue_name" placeholder="Masjid / hall / institution" autocomplete="organization" required />
+    </div>
+
+    <div class="field">
+      <label for="attendance">Expected Attendance <span class="req">*</span></label>
+      <select id="attendance" name="attendance_range" required>
+        <option value="" disabled selected>Select a range</option>
+        <option>Under 100</option>
+        <option>100&ndash;500</option>
+        <option>500&ndash;1,000</option>
+        <option>1,000+</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="details">Additional Details</label>
+      <textarea id="details" name="additional_details" placeholder="Timings, topic requests, travel arrangements, anything else we should know…"></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">
+      <span class="spinner" aria-hidden="true"></span>
+      <span class="btn-label">Send Booking Request</span>
+    </button>
+    <p class="form-error" id="formError">Something went wrong. Please try again or email directly.</p>
+  </form>
+</div>
+
+<div class="modal-overlay" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successHeading">
+  <div class="modal-card">
+    <div class="check">
+      <svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+    </div>
+    <h2 id="successHeading">Booking Request Sent!</h2>
+    <p>Shaykh AK&rsquo;s team will review your request and get back to you as soon as possible, In Shaa All&#257;h.</p>
+    <button type="button" class="modal-close" id="modalClose">Close</button>
+  </div>
+</div>
+
+<script>
+  // Mobile nav
+  (function () {
+    var toggle = document.getElementById('navToggle');
+    var menu = document.getElementById('navMenu');
+    if (!toggle || !menu) return;
+    function setOpen(open) {
+      menu.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    toggle.addEventListener('click', function () { setOpen(!menu.classList.contains('open')); });
+    menu.addEventListener('click', function (e) { if (e.target.tagName === 'A') setOpen(false); });
+    document.addEventListener('click', function (e) {
+      if (!menu.contains(e.target) && !toggle.contains(e.target)) setOpen(false);
+    });
+    window.addEventListener('resize', function () { if (window.innerWidth > 720) setOpen(false); });
+  })();
+
+  const form = document.getElementById('bookingForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const btnLabel = submitBtn.querySelector('.btn-label');
+  const formError = document.getElementById('formError');
+  let submitting = false;
+
+  function setLoading(on) {
+    submitting = on;
+    submitBtn.disabled = on;
+    submitBtn.classList.toggle('loading', on);
+    btnLabel.textContent = on ? 'Sending…' : 'Send Booking Request';
+  }
+  const successModal = document.getElementById('successModal');
+
+  function closeModal() {
+    // Reload so the visitor gets a fresh, empty form to submit another request.
+    location.reload();
+  }
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  successModal.addEventListener('click', (e) => { if (e.target === successModal) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && successModal.classList.contains('show')) closeModal();
+  });
+
+  // Prevent selecting a past date
+  document.getElementById('date').min = new Date().toISOString().split('T')[0];
+
+  // --- Client-side validation setup ---
+  const REQUIRED_MSG = 'This field is required.';
+  const EMAIL_MSG = 'Please enter a valid email address.';
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Every control that must be filled in, with the field wrapper it lives in.
+  const validated = [...form.querySelectorAll('[required]')].map((control) => {
+    const field = control.closest('.field');
+    const msg = document.createElement('p');
+    msg.className = 'field-error';
+    msg.textContent = REQUIRED_MSG;
+    field.appendChild(msg);
+    // Clear this field's error as soon as the user corrects it.
+    control.addEventListener('input', () => clearError(field));
+    control.addEventListener('change', () => clearError(field));
+    return { control, field, msg };
+  });
+
+  function clearError(field) {
+    field.classList.remove('invalid');
+  }
+
+  function showError(field, text) {
+    field.querySelector('.field-error').textContent = text;
+    field.classList.add('invalid');
+  }
+
+  // Returns true if the whole form passes; marks every failing field otherwise.
+  function validateForm() {
+    let firstInvalid = null;
+
+    validated.forEach(({ control, field }) => {
+      const value = control.value.trim();
+
+      if (!value) {
+        showError(field, REQUIRED_MSG);
+        firstInvalid = firstInvalid || field;
+        return;
+      }
+
+      if (control.type === 'email' && !EMAIL_RE.test(value)) {
+        showError(field, EMAIL_MSG);
+        firstInvalid = firstInvalid || field;
+        return;
+      }
+
+      clearError(field);
+    });
+
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const input = firstInvalid.querySelector('input, select, textarea');
+      if (input) input.focus({ preventScroll: true });
+    }
+
+    return !firstInvalid;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (submitting) return;              // ignore repeat clicks while in flight
+    formError.style.display = 'none';
+
+    // Don't touch Formspree until every field is valid.
+    if (!validateForm()) return;
+
+    // Lock the button immediately so a double-click can't send twice.
+    setLoading(true);
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        setLoading(false);               // form sits behind the modal anyway
+        successModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('modalClose').focus();
+      } else {
+        throw new Error('Bad response');
+      }
+    } catch (err) {
+      formError.style.display = 'block';
+      setLoading(false);
+    }
+  });
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-social">
+      <a href="https://soundcloud.com/" target="_blank" rel="noopener noreferrer" aria-label="SoundCloud">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c0-.057-.045-.1-.09-.1m-.899.828c-.06 0-.091.037-.104.094L0 14.479l.165 1.308c0 .055.045.094.09.094s.089-.045.104-.104l.21-1.319-.21-1.334c0-.061-.044-.09-.09-.09m1.83-1.229c-.061 0-.12.045-.12.104l-.21 2.563.225 2.458c0 .06.045.12.119.12.061 0 .105-.061.121-.12l.254-2.474-.254-2.548c-.016-.06-.061-.12-.121-.12m.945-.089c-.075 0-.135.06-.15.135l-.193 2.64.21 2.544c.016.077.075.138.149.138.075 0 .135-.061.15-.15l.24-2.532-.24-2.623c0-.075-.06-.135-.135-.135m1.155.36c-.005-.09-.075-.149-.159-.149-.09 0-.158.06-.164.149l-.217 2.43.2 2.563c0 .09.075.157.159.157.074 0 .148-.068.148-.158l.227-2.563-.227-2.444m.809-1.709c-.101 0-.18.09-.18.181l-.21 3.957.187 2.563c0 .09.08.164.18.164.094 0 .174-.09.18-.18l.209-2.563-.209-3.972c-.008-.104-.088-.18-.18-.18m.959-.914c-.105 0-.195.09-.203.194l-.18 4.872.165 2.548c0 .12.09.209.195.209.104 0 .194-.089.21-.209l.193-2.548-.192-4.856c-.016-.12-.105-.21-.21-.21m1.155.884c0-.12-.106-.221-.226-.221-.12 0-.226.101-.226.221l-.15 4.045.165 2.539c0 .119.105.225.225.225.121 0 .226-.105.226-.225l.18-2.539-.18-4.045m.989-.084c0-.135-.105-.24-.24-.24-.135 0-.24.105-.24.24l-.15 3.858.15 2.51c0 .149.105.24.24.24.135 0 .24-.106.24-.24l.166-2.51-.166-3.858m1.245.284c0-.15-.12-.27-.271-.27-.15 0-.271.12-.271.27l-.135 3.564.15 2.514c0 .149.121.27.271.27.15 0 .271-.121.271-.27l.15-2.514-.15-3.564m.976-.494c0-.166-.135-.301-.301-.301-.165 0-.301.135-.301.301l-.12 4.058.135 2.489c0 .164.135.299.301.299.165 0 .301-.135.301-.299l.135-2.489-.135-4.058m1.005.164c0-.181-.135-.315-.316-.315-.18 0-.315.135-.315.315l-.104 3.898.12 2.474c0 .181.135.316.315.316.181 0 .316-.135.316-.316l.119-2.474-.119-3.898m.99-1.109c-.045-.03-.104-.061-.166-.061-.062 0-.121.031-.166.061-.09.061-.15.15-.15.256l-.105 4.627.105 2.474c.007.075.036.15.09.196.06.06.135.09.226.09.075 0 .149-.03.194-.075.06-.06.104-.135.104-.226l.121-2.474-.121-4.529c-.008-.104-.057-.194-.135-.256m5.836 2.529c-.24 0-.464.045-.68.135-.135-1.529-1.412-2.729-2.985-2.729-.39 0-.759.075-1.09.211-.135.06-.165.104-.166.209v6.267c0 .105.075.195.181.211h4.74c.945 0 1.71-.766 1.71-1.711s-.765-1.688-1.71-1.688"/></svg>
+      </a>
+      <a href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer" aria-label="Spotify">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.56 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      </a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </a>
+      <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </a>
+    </div>
+    <a class="footer-email" href="mailto:contact@shaykhak.com">contact@shaykhak.com</a>
+    <p class="footer-copy">&copy; 2026 Shaykh AK &middot; Teaching the Aqeedah &amp; Manhaj of Ahl Hadeeth.</p>
+  </div>
+</footer>
+<script>
+  // Fade sections up as they scroll into view; gig cards / form fields stagger.
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+        !('IntersectionObserver' in window)) return;
+
+    function reveal(el, delay) {
+      setTimeout(function () {
+        el.classList.add('in');
+        var clean = function () {
+          el.removeEventListener('transitionend', clean);
+          el.classList.remove('reveal', 'in');
+        };
+        el.addEventListener('transitionend', clean);
+        setTimeout(clean, 900);          // fallback if transitionend never fires
+      }, delay || 0);
+    }
+
+    // Elements revealed individually as each scrolls into view.
+    var singles = document.querySelectorAll(
+      '.hero .tagline, .hero .btn-book, .classes h2, .classes .sub, ' +
+      '.page-title, .page-sub, .player, .footer-inner'
+    );
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        reveal(e.target, 0);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    Array.prototype.forEach.call(singles, function (el) {
+      el.classList.add('reveal');
+      io.observe(el);
+    });
+
+    // Staggered groups: when the container appears, its children fade up one by one.
+    [['.scroller', '.card'], ['#bookingForm', '.field']].forEach(function (pair) {
+      var container = document.querySelector(pair[0]);
+      if (!container) return;
+      var kids = container.querySelectorAll(pair[1]);
+      if (!kids.length) return;
+      Array.prototype.forEach.call(kids, function (el) { el.classList.add('reveal'); });
+      var group = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          group.disconnect();
+          Array.prototype.forEach.call(kids, function (el, i) {
+            reveal(el, Math.min(i, 8) * 90);
+          });
+        });
+      }, { threshold: 0.1 });
+      group.observe(container);
+    });
+  })();
+</script>
+</body>
+</html>
