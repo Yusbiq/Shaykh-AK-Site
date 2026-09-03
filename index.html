@@ -164,43 +164,23 @@
 
   .hero h1 {
     font-size: clamp(3rem, 14vw, 9rem);
-    font-weight: 800;
-    letter-spacing: 0.02em;
+    font-weight: 700;
+    letter-spacing: 0.03em;
     line-height: 1;
     white-space: nowrap;             /* "Shaykh AK" always on one line */
-    color: #fff;
-    --glow:
-      0 0 4px rgba(255, 255, 255, 0.95),
-      0 0 11px rgba(255, 255, 255, 0.8),
-      0 0 22px rgba(139, 92, 246, 1),
-      0 0 42px rgba(139, 92, 246, 0.9),
-      0 0 70px rgba(139, 92, 246, 0.75),
-      0 0 30px rgba(236, 72, 153, 0.9),
-      0 0 60px rgba(236, 72, 153, 0.8),
-      0 0 100px rgba(236, 72, 153, 0.6),
-      0 0 150px rgba(236, 72, 153, 0.45),
-      0 0 200px rgba(139, 92, 246, 0.35);
-    text-shadow: var(--glow);
-    animation: flicker 4.5s infinite alternate, pulse 3.2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { filter: brightness(1); }
-    50% { filter: brightness(1.18); }
-  }
-
-  @keyframes flicker {
-    0%, 18%, 22%, 25%, 53%, 57%, 100% {
-      text-shadow: var(--glow);
-      opacity: 1;
-    }
-    20%, 24%, 55% {
-      text-shadow:
-        0 0 4px rgba(255, 255, 255, 0.5),
-        0 0 12px rgba(139, 92, 246, 0.5),
-        0 0 30px rgba(236, 72, 153, 0.35);
-      opacity: 0.82;
-    }
+    /* Pink-outlined title: a deep near-black fill (the moving background
+       still tints faintly through), a crisp pink stroke — masked on its
+       inner edge by the fill so the letters stay clean — a soft pink
+       halo and a deep drop shadow so it sits proud of the page. */
+    color: rgba(9, 4, 12, 0.82);
+    -webkit-text-stroke: 2px var(--pink);
+    paint-order: stroke fill;
+    text-shadow:
+      0 0 4px rgba(255, 150, 200, 0.45),
+      0 0 26px rgba(236, 72, 153, 0.5),
+      0 0 70px rgba(236, 72, 153, 0.3),
+      0 0 140px rgba(236, 72, 153, 0.15),
+      0 20px 44px rgba(0, 0, 0, 0.8);
   }
 
   .hero .tagline {
@@ -388,13 +368,7 @@
   @media (max-width: 600px) {
     nav { padding: 1rem 1.25rem; }
     .hero { min-height: calc(50vh - 30px); padding: 1.5rem 1.25rem 2.25rem; }
-    .hero h1 { --glow:
-      0 0 4px rgba(255,255,255,0.95),
-      0 0 11px rgba(255,255,255,0.8),
-      0 0 22px rgba(139,92,246,1),
-      0 0 40px rgba(139,92,246,0.85),
-      0 0 65px rgba(236,72,153,0.7),
-      0 0 95px rgba(236,72,153,0.5); }
+    .hero h1 { -webkit-text-stroke-width: 2px; }
     .hero .tagline { margin-top: 0.7rem; }
     .btn-book { margin-top: 1.1rem; padding: 0.9rem 2.25rem; }
     .classes { padding: 2rem 0 4rem; }
