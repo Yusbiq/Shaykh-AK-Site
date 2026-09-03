@@ -726,8 +726,8 @@
       <button id="back15" aria-label="Back 15 seconds">
         <svg viewBox="0 0 24 24"><path d="M11 6V2L5 8l6 6V9c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H3c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8z"/></svg>
       </button>
-      <button class="play-btn" id="playPause" aria-label="Play or pause">
-        <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
+      <button class="play-btn" id="playPause" aria-label="Play">
+        <svg viewBox="0 0 24 24"><path id="playIcon" d="M8 5v14l11-7z"/></svg>
       </button>
       <button id="fwd15" aria-label="Forward 15 seconds">
         <svg viewBox="0 0 24 24"><path d="M13 6V2l6 6-6 6V9c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6h2c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8z"/></svg>
@@ -751,7 +751,7 @@
 <div class="dock" id="dock" role="button" tabindex="0" aria-label="Expand full player">
   <div class="dock-progress"><div class="dock-fill" id="dockFill"></div></div>
   <button class="dock-play" id="dockPlay" aria-label="Play or pause">
-    <svg viewBox="0 0 24 24" id="dockIcon"><path d="M8 5v14l11-7z"/></svg>
+    <svg viewBox="0 0 24 24"><path id="dockIcon" d="M8 5v14l11-7z"/></svg>
   </button>
   <div class="dock-info">
     <div class="dock-title" id="dockTitle">—</div>
@@ -1144,6 +1144,8 @@
     const playing = !audio.paused;
     playIcon.setAttribute('d', playing ? PAUSE_PATH : PLAY_PATH);
     dockIcon.setAttribute('d', playing ? PAUSE_PATH : PLAY_PATH);
+    playPause.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    dockPlay.setAttribute('aria-label', playing ? 'Pause' : 'Play');
     art.classList.toggle('paused', !playing);
     document.querySelectorAll('.pl-item').forEach(el => {
       el.classList.toggle('playing', playing && el.classList.contains('active'));
