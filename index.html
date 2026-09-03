@@ -251,6 +251,46 @@
     font-size: 0.95rem;
   }
 
+  /* Clickable "Sounds" block linking to the Sounds page */
+  a.sounds-link {
+    display: block;
+    text-decoration: none;
+    padding: 3rem 1.5rem 3.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.25s ease;
+  }
+  a.sounds-link .sub {
+    margin-bottom: 0;
+    transition: color 0.2s ease;
+  }
+  a.sounds-link .sub::after {
+    content: " \2192";
+    display: inline-block;
+    margin-left: 0.15rem;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  a.sounds-link:hover,
+  a.sounds-link:focus-visible {
+    background: rgba(139, 92, 246, 0.06);
+    outline: none;
+  }
+  a.sounds-link:hover h2,
+  a.sounds-link:focus-visible h2 {
+    filter: brightness(1.15) drop-shadow(0 0 14px rgba(236, 72, 153, 0.5));
+  }
+  a.sounds-link:hover .sub,
+  a.sounds-link:focus-visible .sub {
+    color: var(--text);
+  }
+  a.sounds-link:hover .sub::after,
+  a.sounds-link:focus-visible .sub::after {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
   .scroller {
     display: flex;
     gap: 1.5rem;
@@ -553,6 +593,11 @@
   <a class="btn-book" href="booking.html">Book Now</a>
 </header>
 
+<a class="classes sounds-link" id="sounds" href="sounds.html">
+  <h2>Sounds</h2>
+  <p class="sub">Recorded lectures and audio series coming soon.</p>
+</a>
+
 <section class="classes" id="book">
   <h2>Upcoming Classes</h2>
   <p class="sub">Swipe through the schedule &rarr;</p>
@@ -583,11 +628,6 @@
       <div class="venue">Online &mdash; Live Stream</div>
     </article>
   </div>
-</section>
-
-<section class="classes" id="sounds">
-  <h2>Sounds</h2>
-  <p class="sub">Recorded lectures and audio series coming soon.</p>
 </section>
 
 <footer class="site-footer">
