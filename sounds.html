@@ -764,31 +764,33 @@
 <audio id="audioFade" preload="none"></audio>
 
 <script>
+  // Audio hosted on Cloudflare R2 (bucket: vibe-codeprojects, folder: ShaykhAK-Sounds).
+  const AUDIO_BASE = "https://pub-28c7b7eb35a2451cb3a140ee05a39972.r2.dev/ShaykhAK-Sounds/";
   const tracks = [
     {
       title: "The Creed of the People of Hadith Regarding the Attributes of Allah — Part 1",
       artist: "Shaykh Abu Khadeejah · Summer Conference 2026",
-      src: "audio/Summer Conf 2026 Part 1 The Creed of the People of Hadith Regarding the Attributes of Allah By Sh Abu Khadeejah.mp3"
+      src: AUDIO_BASE + "Summer Conf 2026 Part 1 The Creed of the People of Hadith Regarding the Attributes of Allah By Sh Abu Khadeejah.mp3"
     },
     {
       title: "The Creed of the People of Hadith Regarding the Attributes of Allah — Part 2",
       artist: "Shaykh Abu Khadeejah · Summer Conference 2026",
-      src: "audio/Summer Conf 2026 Part 2 The Creed of the People of Hadith Regarding the Attributes of Allah By Sh Abu Khadeejah.mp3"
+      src: AUDIO_BASE + "Summer Conf 2026 Part 2 The Creed of the People of Hadith Regarding the Attributes of Allah By Sh Abu Khadeejah.mp3"
     },
     {
       title: "This is My Straight Path, so Follow it, and do not Follow the Other Paths",
       artist: "Shaykh Abu Khadeejah",
-      src: "audio/This is My Straight Path so Follow it, and do not Follow the Other Paths By Sh Abu Khadeejah.mp3"
+      src: AUDIO_BASE + "This is My Straight Path so Follow it, and do not Follow the Other Paths By Sh Abu Khadeejah.mp3"
     },
     {
       title: "“Whoever obeys Allah and His Messenger will be with the Prophets…”",
       artist: "Shaykh Abu Khadeejah",
-      src: "audio/“Whoever obeys Allah and His Messenger will be with the Prophets…” By Abu Khadeejah.mp3"
+      src: AUDIO_BASE + "“Whoever obeys Allah and His Messenger will be with the Prophets…” By Abu Khadeejah.mp3"
     },
     {
       title: "Final Advice — Summer Conference 2026",
       artist: "Shaykh Abu Khadeejah & Shaykh Abu Hafsah",
-      src: "audio/Summer Conf 2026 Final Advice Sh Abu Khadeejah Sh Abu Hafsah.mp3"
+      src: AUDIO_BASE + "Summer Conf 2026 Final Advice Sh Abu Khadeejah Sh Abu Hafsah.mp3"
     }
   ];
 
@@ -838,15 +840,21 @@
 
   function ensureAudioGraph() {
     if (audioCtx || vizDisabled) return;
-    // A MediaElementAudioSource routes ALL playback through the graph. Under the
-    // file:// protocol Chrome treats the media as cross-origin and the graph
-    // outputs pure silence — so only wire up the analyser when the page is
-    // actually being served. Opened straight from disk, audio plays normally and
-    // the bars just sit idle.
+    // A MediaElementAudioSource routes ALL playback through the graph, and the
+    // graph outputs pure silence whenever the media is cross-origin without CORS
+    // (that includes file:// and the R2 bucket, which sends no CORS header). So
+    // only wire up the analyser for same-origin, served audio — otherwise leave
+    // the element untouched so it plays, and the bars run the synth fallback.
     if (location.protocol !== 'http:' && location.protocol !== 'https:') {
       vizDisabled = true;
       return;
     }
+    try {
+      if (new URL(tracks[index].src, location.href).origin !== location.origin) {
+        vizDisabled = true;                   // cross-origin audio (Cloudflare R2)
+        return;
+      }
+    } catch (e) { vizDisabled = true; return; }
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) { vizDisabled = true; return; }
     try {
